@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.19.2",
     "babel-standalone": "^6.26.0",
     "create-react-class": "^15.6.3",
     "date-and-time": "^0.6.3",
@@ -19,6 +19,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.6.0",
+    "express": "^4.17.1",
     "prettier": "1.10.2"
   }
 }
