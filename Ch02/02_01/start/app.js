@@ -4,7 +4,7 @@
   function SizeSelector(props) {
     function sizeOptions() {
       let sizes = window.Inventory.allSizes;
-      return sizes.map(function(num) {
+      return sizes.map(num => {
         return (
           <option value={num} key={num}>
             {num}
@@ -15,7 +15,7 @@
     return (
       <div className="field-group">
         <label htmlFor="size-options">Available Size:</label>
-        <select className="sizeOptions" id="size-options">
+        <select defaultValue={props.size} className="sizeOptions" id="size-options">
           { sizeOptions() }
         </select>
       </div>
@@ -23,7 +23,7 @@
   }
   
   function ProductImage(props) {
-    return <img src='../../../assets/red.jpg' alt='product-image' />
+    return <img src={`../../../assets/${props.color}.jpg`} alt='product-image' />
   }
   
 
@@ -31,10 +31,10 @@
     return (
       <div className='customizer'>
         <div className='product-image'>
-          <ProductImage />
+          <ProductImage color="blue"/>
         </div>
         <div className="selectors">	
-          <SizeSelector />
+          <SizeSelector size={9.5} />
         </div>	
       </div>
     ); 
