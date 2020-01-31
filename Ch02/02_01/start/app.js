@@ -20,6 +20,26 @@
       </div>
     )
   }
+
+  function ColorSelector(props) {
+    return (
+      <div className="field-group">
+        <label htmlFor="color-options">Available Color:</label>
+        <select defaultValue={props.color} className="colorOptions" id="color-options">
+          { colorOptions() }
+        </select>
+      </div>
+    )
+    function colorOptions() {
+      return props.colors.map(name => {
+        return (
+          <option value={name} key={name}>
+            {name}
+          </option>
+        ) 
+      })
+    }
+  }
   
   function ProductImage(props) {
     return <img src={`../../../assets/${props.color}.jpg`} alt='product-image' />
@@ -29,7 +49,8 @@
   function ProductCustomizer(props) {
     const [size, setSize] = React.useState(9.5);
     const [sizes, setSizes] = React.useState(window.Inventory.allSizes);
-    const [color, setColor] = React.useState("blue");
+    const [color, setColor] = React.useState("purple");
+    const [colors, setColors] = React.useState(window.Inventory.allColors);
 
     return (
       <div className='customizer'>
@@ -38,6 +59,7 @@
         </div>
         <div className="selectors">	
           <SizeSelector size={size} sizes={sizes} />
+          <ColorSelector color={color} colors={colors} />
         </div>	
       </div>
     ); 
