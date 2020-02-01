@@ -11,10 +11,15 @@
         ) 
       })
     }
+
+    function onSizeChange(e) {
+      props.handleSizeChange(e.target.value);
+    }
+
     return (
       <div className="field-group">
         <label htmlFor="size-options">Available Size:</label>
-        <select defaultValue={props.size} className="sizeOptions" id="size-options">
+        <select defaultValue={props.size} className="sizeOptions" id="size-options" onChange={onSizeChange}>
           { sizeOptions() }
         </select>
       </div>
@@ -52,13 +57,18 @@
     const [color, setColor] = React.useState("purple");
     const [colors, setColors] = React.useState(window.Inventory.allColors);
 
+    function handleSizeChange(selectedSize) {
+      let availableColors = window.Inventory.bySize[selectedSize];
+      setColors(availableColors);
+    }
+
     return (
       <div className='customizer'>
         <div className='product-image'>
           <ProductImage color={color}/>
         </div>
         <div className="selectors">	
-          <SizeSelector size={size} sizes={sizes} />
+          <SizeSelector size={size} sizes={sizes} handleSizeChange={handleSizeChange}/>
           <ColorSelector color={color} colors={colors} />
         </div>	
       </div>
