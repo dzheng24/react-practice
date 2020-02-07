@@ -92,12 +92,13 @@
         currentTitle: '',
         isIntern: false
       };
+      this.updateFormState = this.updateFormState.bind(this);
+    }
 
-      this.updateFormState = (name, val) => {
-        this.setState({
-          [name]: val
-        }), this.updatePeopleList();
-      };
+    updateFormState(name, val) {
+      this.setState({
+        [name]: val
+      }, this.updatePeopleList);
     }
 
     updatePeopleList() {

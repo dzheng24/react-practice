@@ -98,16 +98,18 @@
         isIntern: false
       };
 
-      this.updateFormState = (name, val) => {
-        this.setState(
-          {
-            [name] : val
-          }
-        ),
-        this.updatePeopleList();
-      }
+      this.updateFormState = this.updateFormState.bind(this);
     }
 
+    updateFormState(name, val) {
+      this.setState(
+        {
+          [name] : val
+        },
+        this.updatePeopleList
+      )
+    }
+    
     updatePeopleList() {
       var filteredPeople = window.LMDirectory.people.filter(
         function(person) {
