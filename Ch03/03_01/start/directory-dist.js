@@ -29,6 +29,19 @@
 
   function Filters(props) {
     let titles = window.LMDirectory.titles;
+
+    function updateName(e) {
+      props.updateFormState('currentName', e.target.value);
+    }
+
+    function updateTitle(e) {
+      props.updateFormState('currentTitle', e.target.value);
+    }
+
+    function updateIntern(e) {
+      props.updateFormState('isIntern', e.target.checked);
+    }
+
     return React.createElement("form", {
       action: "",
       id: "directory-filters"
@@ -40,14 +53,18 @@
       type: "text",
       name: "person_name",
       placeholder: "Name of employee",
-      id: "person-name"
+      id: "person-name",
+      value: props.currentName,
+      onChange: updateName
     })), React.createElement("div", {
       className: "group"
     }, React.createElement("label", {
       htmlFor: "person-title"
     }, "Job Title:"), React.createElement("select", {
       name: "person_title",
-      id: "person-title"
+      id: "person-title",
+      value: props.currentTitle,
+      onChange: updateTitle
     }, React.createElement("option", {
       value: ""
     }, "- Select -"), titles.map(title => {
@@ -60,7 +77,9 @@
     }, React.createElement("label", null, React.createElement("input", {
       type: "checkbox",
       value: "1",
-      name: "person_intern"
+      name: "person_intern",
+      checked: props.isIntern,
+      onChange: updateIntern
     }), "Intern")));
   }
 
@@ -68,14 +87,28 @@
     constructor(props) {
       super(props);
       this.state = {
-        people: window.LMDirectory.people
+        people: window.LMDirectory.people,
+        currentName: '',
+        currentTitle: '',
+        isIntern: false
+      };
+
+      this.updateFormState = (name, val) => {
+        this.setState({
+          [name]: val
+        });
       };
     }
 
     render() {
       return React.createElement("div", {
         className: "company-directory"
-      }, React.createElement("h2", null, "Company Directory"), React.createElement("p", null, "Learn more about each person at Leaf & Mortar in this company directory."), React.createElement(Filters, null), React.createElement(People, {
+      }, React.createElement("h2", null, "Company Directory"), React.createElement("p", null, "Learn more about each person at Leaf & Mortar in this company directory."), React.createElement(Filters, {
+        currentName: this.state.currentName,
+        currentTitle: this.state.currentTitle,
+        isIntern: this.state.isIntern,
+        updateFormState: this.updateFormState
+      }), React.createElement(People, {
         people: this.state.people
       }));
     }
