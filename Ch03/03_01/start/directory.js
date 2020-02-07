@@ -19,7 +19,7 @@
   function People(props) {
     return (
       <div className="results">
-        {props.people.map(function(person) {
+        {props.people.map(person => {
           return <Person key={person.id} person={person}/>
         })}
 
@@ -28,9 +28,30 @@
   }
 
   function Filters(props) {
+    let titles = window.LMDirectory.titles;
+
     return (
       <form action="" id="directory-filters">
-        <p>filters go here</p>
+        <div className="group">
+          <label htmlFor="person-name">Name:</label>
+          <input type="text" name="person_name" placeholder="Name of employee" id="person-name" />
+        </div>
+        <div className="group">
+          <label htmlFor="person-title">Job Title:</label>
+          <select name="person_title" id="person-title">
+            <option value="">- Select -</option>
+            {titles.map(title => {
+              return (
+                <option value={title.key} key={title.key}>
+                  {title.display}
+                </option>
+              )
+            })}
+          </select>
+        </div>
+        <div className="group">
+          <label><input type="checkbox" value="1" name="person_intern" />Intern</label>
+        </div>
       </form>
     )
   }

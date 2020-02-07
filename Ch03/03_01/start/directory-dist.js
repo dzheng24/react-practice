@@ -19,7 +19,7 @@
   function People(props) {
     return React.createElement("div", {
       className: "results"
-    }, props.people.map(function (person) {
+    }, props.people.map(person => {
       return React.createElement(Person, {
         key: person.id,
         person: person
@@ -28,10 +28,40 @@
   }
 
   function Filters(props) {
+    let titles = window.LMDirectory.titles;
     return React.createElement("form", {
       action: "",
       id: "directory-filters"
-    }, React.createElement("p", null, "filters go here"));
+    }, React.createElement("div", {
+      className: "group"
+    }, React.createElement("label", {
+      htmlFor: "person-name"
+    }, "Name:"), React.createElement("input", {
+      type: "text",
+      name: "person_name",
+      placeholder: "Name of employee",
+      id: "person-name"
+    })), React.createElement("div", {
+      className: "group"
+    }, React.createElement("label", {
+      htmlFor: "person-title"
+    }, "Job Title:"), React.createElement("select", {
+      name: "person_title",
+      id: "person-title"
+    }, React.createElement("option", {
+      value: ""
+    }, "- Select -"), titles.map(title => {
+      return React.createElement("option", {
+        value: title.key,
+        key: title.key
+      }, title.display);
+    }))), React.createElement("div", {
+      className: "group"
+    }, React.createElement("label", null, React.createElement("input", {
+      type: "checkbox",
+      value: "1",
+      name: "person_intern"
+    }), "Intern")));
   }
 
   class Directory extends React.Component {
