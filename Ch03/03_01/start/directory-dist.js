@@ -19,12 +19,15 @@
   function People(props) {
     return React.createElement("div", {
       className: "results"
-    }, props.people.map(person => {
-      return React.createElement(Person, {
+    }, React.createElement(ReactTransitionGroup.TransitionGroup, null, props.people.map(person => {
+      return React.createElement(ReactTransitionGroup.CSSTransition, {
         key: person.id,
+        classNames: "fade",
+        timeout: 2000
+      }, React.createElement(Person, {
         person: person
-      });
-    }));
+      }));
+    })));
   }
 
   function Filters(props) {

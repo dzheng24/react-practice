@@ -19,10 +19,15 @@
   function People(props) {
     return (
       <div className="results">
+      <ReactTransitionGroup.TransitionGroup>
         {props.people.map(person => {
-          return <Person key={person.id} person={person}/>
-        })}
-
+          return (
+          <ReactTransitionGroup.CSSTransition key={person.id} classNames="fade" timeout={2000}>
+            <Person person={person}/>
+          </ReactTransitionGroup.CSSTransition>
+          )
+        })}       
+      </ReactTransitionGroup.TransitionGroup>
       </div>
     )
   }
