@@ -7,3 +7,6 @@ Instructor: Joe Chellman
 
 Project 1: Product Customizer 
   - reviewed react basics, state, props, hooks 
+
+Project 2: Directory Browser 
+  - more practice on class, state, setState, and animation 
