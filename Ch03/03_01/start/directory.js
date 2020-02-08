@@ -22,7 +22,15 @@
       <ReactTransitionGroup.TransitionGroup>
         {props.people.map(person => {
           return (
-          <ReactTransitionGroup.CSSTransition key={person.id} classNames="fade" timeout={2000}>
+          <ReactTransitionGroup.CSSTransition 
+            key={person.id} 
+            classNames={{
+              enter: "animated",
+              enterActive: "zoomIn",
+              exit: "animated",
+              exitActive: "zoomOut"
+            }} 
+            timeout={2000}>
             <Person person={person}/>
           </ReactTransitionGroup.CSSTransition>
           )
@@ -36,15 +44,23 @@
     let titles = window.LMDirectory.titles;
 
     function updateName(e) {
-      props.updateFormState('currentName', e.target.value);
+      props.updateFormState({currentName: e.target.value});
     }
 
     function updateTitle(e) {
-      props.updateFormState('currentTitle', e.target.value);
+      props.updateFormState({currentTitle: e.target.value});
     }
 
     function updateIntern(e) {
-      props.updateFormState('isIntern', e.target.checked);
+      props.updateFormState({isIntern: e.target.checked});
+    }
+
+    function resetFilters() {
+      props.updateFormState({
+        currentName: '',
+        currentTitle: '',
+        isIntern: false
+      })
     }
 
     return (
@@ -88,6 +104,9 @@
               Intern
           </label>
         </div>
+        <div className="group">
+          <input type="reset" value="Reset" onClick={resetFilters}/>
+        </div>
       </form>
     )
   }
@@ -106,13 +125,8 @@
       this.updateFormState = this.updateFormState.bind(this);
     }
 
-    updateFormState(name, val) {
-      this.setState(
-        {
-          [name] : val
-        },
-        this.updatePeopleList
-      )
+    updateFormState(spec) {
+      this.setState(spec, this.updatePeopleList)
     }
     
     updatePeopleList() {

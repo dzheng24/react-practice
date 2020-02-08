@@ -22,7 +22,12 @@
     }, React.createElement(ReactTransitionGroup.TransitionGroup, null, props.people.map(person => {
       return React.createElement(ReactTransitionGroup.CSSTransition, {
         key: person.id,
-        classNames: "fade",
+        classNames: {
+          enter: "animated",
+          enterActive: "zoomIn",
+          exit: "animated",
+          exitActive: "zoomOut"
+        },
         timeout: 2000
       }, React.createElement(Person, {
         person: person
@@ -34,15 +39,29 @@
     let titles = window.LMDirectory.titles;
 
     function updateName(e) {
-      props.updateFormState('currentName', e.target.value);
+      props.updateFormState({
+        currentName: e.target.value
+      });
     }
 
     function updateTitle(e) {
-      props.updateFormState('currentTitle', e.target.value);
+      props.updateFormState({
+        currentTitle: e.target.value
+      });
     }
 
     function updateIntern(e) {
-      props.updateFormState('isIntern', e.target.checked);
+      props.updateFormState({
+        isIntern: e.target.checked
+      });
+    }
+
+    function resetFilters() {
+      props.updateFormState({
+        currentName: '',
+        currentTitle: '',
+        isIntern: false
+      });
     }
 
     return React.createElement("form", {
@@ -83,7 +102,13 @@
       name: "person_intern",
       checked: props.isIntern,
       onChange: updateIntern
-    }), "Intern")));
+    }), "Intern")), React.createElement("div", {
+      className: "group"
+    }, React.createElement("input", {
+      type: "reset",
+      value: "Reset",
+      onClick: resetFilters
+    })));
   }
 
   class Directory extends React.Component {
@@ -98,10 +123,8 @@
       this.updateFormState = this.updateFormState.bind(this);
     }
 
-    updateFormState(name, val) {
-      this.setState({
-        [name]: val
-      }, this.updatePeopleList);
+    updateFormState(spec) {
+      this.setState(spec, this.updatePeopleList);
     }
 
     updatePeopleList() {
