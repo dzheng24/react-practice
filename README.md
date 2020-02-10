@@ -6,7 +6,17 @@ Course Name: React for Web Designers
 Instructor: Joe Chellman 
 
 Project 1: Product Customizer 
-  - reviewed react basics, state, props, hooks 
+  - reviewed react basics, state, props, hooks
+
+To view Project 1:
+  - Clone Repo
+  - `cd` into `ChO2 > 02_01 > start` folder
+  - Use "live-server" extension to open up index.html file
 
 Project 2: Directory Browser 
   - more practice on class, state, setState, and animation 
+
+To view Project 2:
+  - Clone Repo
+  - `cd` into `ChO3 > 03_01 > start` folder
+  - Use "live-server" extension to open up index.html file
