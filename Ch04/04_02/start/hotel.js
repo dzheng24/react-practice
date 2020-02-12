@@ -75,6 +75,17 @@
 
     var [statuses, setStatuses] = React.useState(stubStatuses);
 
+    React.useEffect(() => {
+      retrieveStatusMessages();
+    }, []);
+
+    function retrieveStatusMessages() {
+      axios.get('http://localhost/status_api/get.php')
+      .then(response => {
+        setStatuses(response.data)
+      })
+    }
+
     function displayStatusMessages() {
       return statuses.map(function(status) {
         return (
