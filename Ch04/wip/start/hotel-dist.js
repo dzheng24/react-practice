@@ -18,19 +18,34 @@
     }); // so we don't have to type this over and over
 
     var defaultType = typeOptions[0].key;
+    const [messageText, setMessageText] = React.useState('');
+    const [messageType, setMessageType] = React.useState(defaultType);
+
+    function onTextChange(e) {
+      setMessageText(e.target.value);
+    }
+
+    function onTypeChange(e) {
+      setMessageType(e.target.value);
+    }
+
     return React.createElement("form", null, React.createElement("h3", null, "Post an Update"), React.createElement("div", {
       className: "field-group"
     }, React.createElement("label", {
       htmlFor: "txt-message"
     }, "Message"), React.createElement("textarea", {
       id: "txt-message",
-      rows: "2"
+      rows: "2",
+      onChange: onTextChange,
+      value: messageText
     })), React.createElement("div", {
       className: "field-group"
     }, React.createElement("label", {
       htmlFor: "txt-type"
     }, "Type"), React.createElement("select", {
-      id: "txt-type"
+      id: "txt-type",
+      onChange: onTypeChange,
+      value: messageType
     }, typeOptions)), React.createElement("div", {
       className: "field-group action"
     }, React.createElement("input", {

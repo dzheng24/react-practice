@@ -19,18 +19,29 @@
     // so we don't have to type this over and over
     var defaultType = typeOptions[0].key;
 
+    const [messageText, setMessageText] = React.useState('');
+    const [messageType, setMessageType] = React.useState(defaultType);
+
+    function onTextChange(e) {
+      setMessageText(e.target.value);
+    }
+
+    function onTypeChange(e) {
+      setMessageType(e.target.value);
+    }
+
     return (
       <form>
         <h3>Post an Update</h3>
 
         <div className="field-group">
           <label htmlFor="txt-message">Message</label>
-          <textarea id="txt-message" rows="2" />
+          <textarea id="txt-message" rows="2" onChange={onTextChange} value={messageText}/>
         </div>
 
         <div className="field-group">
           <label htmlFor="txt-type">Type</label>
-          <select id="txt-type">{typeOptions}</select>
+          <select id="txt-type" onChange={onTypeChange} value={messageType}>{typeOptions}</select>
         </div>
 
         <div className="field-group action">
