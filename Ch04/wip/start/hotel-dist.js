@@ -29,7 +29,24 @@
       setMessageType(e.target.value);
     }
 
-    return React.createElement("form", null, React.createElement("h3", null, "Post an Update"), React.createElement("div", {
+    function postStatusUpdate(evt) {
+      evt.preventDefault();
+      var newStatus = {
+        msg: messageText,
+        type: messageType,
+        time: date.format(new Date(), "YYYY-MM-DD, HH:mm")
+      };
+      axios.post(CONFIG.apiUrl + "/post.php", newStatus).then(function (response) {
+        console.log(response);
+
+        if (response.data.success) {// Update state (list of messages)
+        }
+      });
+    }
+
+    return React.createElement("form", {
+      onSubmit: postStatusUpdate
+    }, React.createElement("h3", null, "Post an Update"), React.createElement("div", {
       className: "field-group"
     }, React.createElement("label", {
       htmlFor: "txt-message"
