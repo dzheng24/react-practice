@@ -3,6 +3,10 @@
 (function () {
   "use strict";
 
+  const CONFIG = {
+    apiUrl: 'http://localhost/status_api'
+  };
+
   function PostForm(props) {
     var typeOptions = Object.keys(props.messageTypes).map(function (key) {
       if (props.messageTypes.hasOwnProperty(key)) {
@@ -48,30 +52,16 @@
   }
 
   function StatusMessageList(props) {
-    var stubStatuses = [{
-      id: 1,
-      msg: "The hot tub is currently closed for maintenance.  We expect it to be back up and running within 48 hours.",
-      type: "management",
-      time: "2019-04-11, 09:15"
-    }, {
-      id: 2,
-      msg: "The hot tub maintenance is complete.  Please enjoy a dip!",
-      type: "management",
-      time: "2019-04-14, 17:12"
-    }, {
-      id: 3,
-      msg: "The rice cooker is on the fritz, any fried rice dishes will require some extra time to cook.",
-      type: "dining",
-      time: "2019-04-18, 15:00"
-    }];
-    var [statuses, setStatuses] = React.useState(stubStatuses);
+    const [statuses, setStatuses] = React.useState([]);
+    const [loaded, setLoaded] = React.useState(false);
     React.useEffect(() => {
       retrieveStatusMessages();
     }, []);
 
     function retrieveStatusMessages() {
-      axios.get('http://localhost/status_api/get.php').then(response => {
+      axios.get(CONFIG.apiUrl + '/get.php?delay=5').then(response => {
         setStatuses(response.data);
+        setLoaded(true);
       });
     }
 
@@ -87,9 +77,24 @@
       });
     }
 
-    return React.createElement("ul", {
-      id: "status-list"
-    }, displayStatusMessages());
+    if (loaded) {
+      return React.createElement("ul", {
+        id: "status-list"
+      }, displayStatusMessages());
+    } else {
+      return React.createElement("div", {
+        id: "status-list",
+        className: "loading"
+      }, "Loading...", React.createElement("div", {
+        className: "spinner"
+      }, React.createElement("div", {
+        className: "bounce1"
+      }), React.createElement("div", {
+        className: "bounce2"
+      }), React.createElement("div", {
+        className: "bounce3"
+      })));
+    }
   }
 
   function StatusMessageManager(props) {
@@ -100,7 +105,6 @@
       plumbing: "Plumbing",
       pool: "Pool"
     };
-    var apiUrl = "http://localhost/reactjs/status_api";
     return React.createElement(React.Fragment, null, React.createElement("div", {
       id: "post-status"
     }, React.createElement(PostForm, {
