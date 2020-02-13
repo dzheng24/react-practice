@@ -1,9 +1,9 @@
 (function() {
   "use strict";
 
-  var CONFIG = {
-    apiUrl: "http://localhost/reactjs/status_api"
-  };
+  const CONFIG = {
+    apiUrl: 'http://localhost/status_api'
+  }
 
   function PostForm(props) {
     var typeOptions = Object.keys(props.messageTypes).map(function(key) {
@@ -19,58 +19,18 @@
     // so we don't have to type this over and over
     var defaultType = typeOptions[0].key;
 
-    var [messageText, setMessageText] = React.useState("");
-    var [messageType, setMessageType] = React.useState(defaultType);
-
-    function onTextChange(evt) {
-      setMessageText(evt.target.value);
-    }
-
-    function onTypeChange(evt) {
-      setMessageType(evt.target.value);
-    }
-
-    function postStatusUpdate(evt) {
-      evt.preventDefault();
-
-      var newStatus = {
-        msg: messageText,
-        type: messageType,
-        time: date.format(new Date(), "YYYY-MM-DD, HH:mm")
-      };
-
-      axios.post(CONFIG.apiUrl + "/post.php", newStatus).then(function(response) {
-        if (response.data.success) {
-          // Update list of messages
-          newStatus.id = response.data.id;
-          props.addStatusMessage(newStatus);
-
-          // reset the form values
-          setMessageText("");
-          setMessageType(defaultType);
-        }
-      });
-    }
-
     return (
-      <form onSubmit={postStatusUpdate}>
+      <form>
         <h3>Post an Update</h3>
 
         <div className="field-group">
           <label htmlFor="txt-message">Message</label>
-          <textarea
-            id="txt-message"
-            rows="2"
-            onChange={onTextChange}
-            value={messageText}
-          />
+          <textarea id="txt-message" rows="2" />
         </div>
 
         <div className="field-group">
           <label htmlFor="txt-type">Type</label>
-          <select id="txt-type" onChange={onTypeChange} value={messageType}>
-            {typeOptions}
-          </select>
+          <select id="txt-type">{typeOptions}</select>
         </div>
 
         <div className="field-group action">
@@ -94,8 +54,24 @@
   }
 
   function StatusMessageList(props) {
+
+    const [statuses, setStatuses] = React.useState([]);
+    const [loaded, setLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+      retrieveStatusMessages();
+    }, []);
+
+    function retrieveStatusMessages() {
+      axios.get(CONFIG.apiUrl + '/get.php?delay=5')
+      .then(response => {
+        setStatuses(response.data);
+        setLoaded(true);
+      })
+    }
+
     function displayStatusMessages() {
-      return props.statuses.map(function(status) {
+      return statuses.map(function(status) {
         return (
           <li key={status.id}>
             <StatusMessage
@@ -108,7 +84,7 @@
       });
     }
 
-    if (props.loaded) {
+    if (loaded) {
       return <ul id="status-list">{displayStatusMessages()}</ul>;
     } else {
       return (
@@ -133,38 +109,12 @@
       pool: "Pool"
     };
 
-    var [statuses, setStatuses] = React.useState([]);
-    var [loaded, setLoaded] = React.useState(false);
-
-    React.useEffect(function() {
-      retrieveStatusMessages();
-    }, []);
-
-    function retrieveStatusMessages() {
-      axios.get(CONFIG.apiUrl + "/get.php?delay=5").then(function(response) {
-        setStatuses(response.data);
-        setLoaded(true);
-      });
-    }
-
-    function addStatusMessage(status) {
-      var updatedStatuses = statuses.slice(0);
-
-      updatedStatuses.push(status);
-
-      setStatuses(updatedStatuses);
-    }
-
     return (
       <React.Fragment>
         <div id="post-status">
-          <PostForm messageTypes={messageTypes} addStatusMessage={addStatusMessage} />
+          <PostForm messageTypes={messageTypes} />
         </div>
-        <StatusMessageList
-          messageTypes={messageTypes}
-          statuses={statuses}
-          loaded={loaded}
-        />
+        <StatusMessageList messageTypes={messageTypes} />
       </React.Fragment>
     );
   }
