@@ -84,21 +84,8 @@
   }
 
   function StatusMessageList(props) {
-    const [statuses, setStatuses] = React.useState([]);
-    const [loaded, setLoaded] = React.useState(false);
-    React.useEffect(() => {
-      retrieveStatusMessages();
-    }, []);
-
-    function retrieveStatusMessages() {
-      axios.get(CONFIG.apiUrl + '/get.php?delay=5').then(response => {
-        setStatuses(response.data);
-        setLoaded(true);
-      });
-    }
-
     function displayStatusMessages() {
-      return statuses.map(function (status) {
+      return props.statuses.map(function (status) {
         return React.createElement("li", {
           key: status.id
         }, React.createElement(StatusMessage, {
@@ -109,7 +96,7 @@
       });
     }
 
-    if (loaded) {
+    if (props.loaded) {
       return React.createElement("ul", {
         id: "status-list"
       }, displayStatusMessages());
@@ -137,12 +124,27 @@
       plumbing: "Plumbing",
       pool: "Pool"
     };
+    const [statuses, setStatuses] = React.useState([]);
+    const [loaded, setLoaded] = React.useState(false);
+    React.useEffect(() => {
+      retrieveStatusMessages();
+    }, []);
+
+    function retrieveStatusMessages() {
+      axios.get(CONFIG.apiUrl + '/get.php?delay=5').then(response => {
+        setStatuses(response.data);
+        setLoaded(true);
+      });
+    }
+
     return React.createElement(React.Fragment, null, React.createElement("div", {
       id: "post-status"
     }, React.createElement(PostForm, {
       messageTypes: messageTypes
     })), React.createElement(StatusMessageList, {
-      messageTypes: messageTypes
+      messageTypes: messageTypes,
+      statuses: statuses,
+      loaded: loaded
     }));
   }
 

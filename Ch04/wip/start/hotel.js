@@ -84,23 +84,8 @@
 
   function StatusMessageList(props) {
 
-    const [statuses, setStatuses] = React.useState([]);
-    const [loaded, setLoaded] = React.useState(false);
-
-    React.useEffect(() => {
-      retrieveStatusMessages();
-    }, []);
-
-    function retrieveStatusMessages() {
-      axios.get(CONFIG.apiUrl + '/get.php?delay=5')
-      .then(response => {
-        setStatuses(response.data);
-        setLoaded(true);
-      })
-    }
-
     function displayStatusMessages() {
-      return statuses.map(function(status) {
+      return props.statuses.map(function(status) {
         return (
           <li key={status.id}>
             <StatusMessage
@@ -113,7 +98,7 @@
       });
     }
 
-    if (loaded) {
+    if (props.loaded) {
       return <ul id="status-list">{displayStatusMessages()}</ul>;
     } else {
       return (
@@ -138,12 +123,27 @@
       pool: "Pool"
     };
 
+    const [statuses, setStatuses] = React.useState([]);
+    const [loaded, setLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+      retrieveStatusMessages();
+    }, []);
+
+    function retrieveStatusMessages() {
+      axios.get(CONFIG.apiUrl + '/get.php?delay=5')
+      .then(response => {
+        setStatuses(response.data);
+        setLoaded(true);
+      })
+    }
+
     return (
       <React.Fragment>
         <div id="post-status">
           <PostForm messageTypes={messageTypes} />
         </div>
-        <StatusMessageList messageTypes={messageTypes} />
+        <StatusMessageList messageTypes={messageTypes} statuses={statuses} loaded={loaded} />
       </React.Fragment>
     );
   }
