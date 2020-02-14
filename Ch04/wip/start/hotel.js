@@ -76,11 +76,17 @@
     var statusDate = date.parse(props.time, "YYYY-MM-DD, HH:mm"),
       dateFormat = "M/D/Y, h:mm A";
 
+    function deleteMessage(e) {
+      e.preventDefault();
+      console.log(e);
+    }
+
     return (
       <div className="status-message">
         {props.msg}
         <span className="name">— {props.type}</span>
         <span className="time">{date.format(statusDate, dateFormat)}</span>
+        <input type="submit" value="Delete Message" onClick={deleteMessage}/>
       </div>
     );
   }

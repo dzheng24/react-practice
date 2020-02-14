@@ -77,13 +77,23 @@
   function StatusMessage(props) {
     var statusDate = date.parse(props.time, "YYYY-MM-DD, HH:mm"),
         dateFormat = "M/D/Y, h:mm A";
+
+    function deleteMessage(e) {
+      e.preventDefault();
+      console.log(e);
+    }
+
     return React.createElement("div", {
       className: "status-message"
     }, props.msg, React.createElement("span", {
       className: "name"
     }, "\u2014\xA0", props.type), React.createElement("span", {
       className: "time"
-    }, date.format(statusDate, dateFormat)));
+    }, date.format(statusDate, dateFormat)), React.createElement("input", {
+      type: "submit",
+      value: "Delete Message",
+      onClick: deleteMessage
+    }));
   }
 
   function StatusMessageList(props) {
