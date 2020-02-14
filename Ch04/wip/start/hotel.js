@@ -39,11 +39,14 @@
         time: date.format(new Date(), "YYYY-MM-DD, HH:mm")
       };
     
-      axios.post(CONFIG.apiUrl + "/post.php", newStatus).then(function(response) {
-        console.log(response);
-    
+      axios.post(CONFIG.apiUrl + "/post.php", newStatus).then(function(response) {    
         if (response.data.success) {
           // Update state (list of messages)
+          newStatus.id = response.data.id;
+          props.addStatusMessage(newStatus);
+
+          setMessageText('');
+          setMessageType(defaultType);
         }
       });
     }
@@ -131,17 +134,23 @@
     }, []);
 
     function retrieveStatusMessages() {
-      axios.get(CONFIG.apiUrl + '/get.php?delay=5')
+      axios.get(CONFIG.apiUrl + '/get.php')
       .then(response => {
         setStatuses(response.data);
         setLoaded(true);
       })
     }
 
+    function addStatusMessage(status) {
+      let updatedStatuses = statuses.slice(0); //this will make a copy of the statuses
+      updatedStatuses.push(status);
+      setStatuses(updatedStatuses);
+    }
+
     return (
       <React.Fragment>
         <div id="post-status">
-          <PostForm messageTypes={messageTypes} />
+          <PostForm messageTypes={messageTypes} addStatusMessage={addStatusMessage}/>
         </div>
         <StatusMessageList messageTypes={messageTypes} statuses={statuses} loaded={loaded} />
       </React.Fragment>

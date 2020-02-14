@@ -37,9 +37,12 @@
         time: date.format(new Date(), "YYYY-MM-DD, HH:mm")
       };
       axios.post(CONFIG.apiUrl + "/post.php", newStatus).then(function (response) {
-        console.log(response);
-
-        if (response.data.success) {// Update state (list of messages)
+        if (response.data.success) {
+          // Update state (list of messages)
+          newStatus.id = response.data.id;
+          props.addStatusMessage(newStatus);
+          setMessageText('');
+          setMessageType(defaultType);
         }
       });
     }
@@ -131,16 +134,24 @@
     }, []);
 
     function retrieveStatusMessages() {
-      axios.get(CONFIG.apiUrl + '/get.php?delay=5').then(response => {
+      axios.get(CONFIG.apiUrl + '/get.php').then(response => {
         setStatuses(response.data);
         setLoaded(true);
       });
     }
 
+    function addStatusMessage(status) {
+      let updatedStatuses = statuses.slice(0); //this will make a copy of the statuses
+
+      updatedStatuses.push(status);
+      setStatuses(updatedStatuses);
+    }
+
     return React.createElement(React.Fragment, null, React.createElement("div", {
       id: "post-status"
     }, React.createElement(PostForm, {
-      messageTypes: messageTypes
+      messageTypes: messageTypes,
+      addStatusMessage: addStatusMessage
     })), React.createElement(StatusMessageList, {
       messageTypes: messageTypes,
       statuses: statuses,
