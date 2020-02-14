@@ -80,7 +80,9 @@
 
     function deleteMessage(e) {
       e.preventDefault();
-      console.log(e);
+      axios.get(CONFIG.apiUrl + "/get.php").then(res => {
+        console.log(props.id);
+      });
     }
 
     return React.createElement("div", {
@@ -102,6 +104,7 @@
         return React.createElement("li", {
           key: status.id
         }, React.createElement(StatusMessage, {
+          id: status.id,
           msg: status.msg,
           type: props.messageTypes[status.type],
           time: status.time
