@@ -18,19 +18,54 @@
     }); // so we don't have to type this over and over
 
     var defaultType = typeOptions[0].key;
-    return React.createElement("form", null, React.createElement("h3", null, "Post an Update"), React.createElement("div", {
+    const [messageText, setMessageText] = React.useState('');
+    const [messageType, setMessageType] = React.useState(defaultType);
+
+    function onTextChange(e) {
+      setMessageText(e.target.value);
+    }
+
+    function onTypeChange(e) {
+      setMessageType(e.target.value);
+    }
+
+    function postStatusUpdate(evt) {
+      evt.preventDefault();
+      var newStatus = {
+        msg: messageText,
+        type: messageType,
+        time: date.format(new Date(), "YYYY-MM-DD, HH:mm")
+      };
+      axios.post(CONFIG.apiUrl + "/post.php", newStatus).then(function (response) {
+        if (response.data.success) {
+          // Update state (list of messages)
+          newStatus.id = response.data.id;
+          props.addStatusMessage(newStatus);
+          setMessageText('');
+          setMessageType(defaultType);
+        }
+      });
+    }
+
+    return React.createElement("form", {
+      onSubmit: postStatusUpdate
+    }, React.createElement("h3", null, "Post an Update"), React.createElement("div", {
       className: "field-group"
     }, React.createElement("label", {
       htmlFor: "txt-message"
     }, "Message"), React.createElement("textarea", {
       id: "txt-message",
-      rows: "2"
+      rows: "2",
+      onChange: onTextChange,
+      value: messageText
     })), React.createElement("div", {
       className: "field-group"
     }, React.createElement("label", {
       htmlFor: "txt-type"
     }, "Type"), React.createElement("select", {
-      id: "txt-type"
+      id: "txt-type",
+      onChange: onTypeChange,
+      value: messageType
     }, typeOptions)), React.createElement("div", {
       className: "field-group action"
     }, React.createElement("input", {
@@ -42,34 +77,34 @@
   function StatusMessage(props) {
     var statusDate = date.parse(props.time, "YYYY-MM-DD, HH:mm"),
         dateFormat = "M/D/Y, h:mm A";
+
+    function deleteMessage(e) {
+      e.preventDefault();
+      axios.get(CONFIG.apiUrl + "/get.php").then(res => {
+        console.log(props.id);
+      });
+    }
+
     return React.createElement("div", {
       className: "status-message"
     }, props.msg, React.createElement("span", {
       className: "name"
     }, "\u2014\xA0", props.type), React.createElement("span", {
       className: "time"
-    }, date.format(statusDate, dateFormat)));
+    }, date.format(statusDate, dateFormat)), React.createElement("input", {
+      type: "submit",
+      value: "Delete Message",
+      onClick: deleteMessage
+    }));
   }
 
   function StatusMessageList(props) {
-    const [statuses, setStatuses] = React.useState([]);
-    const [loaded, setLoaded] = React.useState(false);
-    React.useEffect(() => {
-      retrieveStatusMessages();
-    }, []);
-
-    function retrieveStatusMessages() {
-      axios.get(CONFIG.apiUrl + '/get.php?delay=5').then(response => {
-        setStatuses(response.data);
-        setLoaded(true);
-      });
-    }
-
     function displayStatusMessages() {
-      return statuses.map(function (status) {
+      return props.statuses.map(function (status) {
         return React.createElement("li", {
           key: status.id
         }, React.createElement(StatusMessage, {
+          id: status.id,
           msg: status.msg,
           type: props.messageTypes[status.type],
           time: status.time
@@ -77,7 +112,7 @@
       });
     }
 
-    if (loaded) {
+    if (props.loaded) {
       return React.createElement("ul", {
         id: "status-list"
       }, displayStatusMessages());
@@ -105,12 +140,35 @@
       plumbing: "Plumbing",
       pool: "Pool"
     };
+    const [statuses, setStatuses] = React.useState([]);
+    const [loaded, setLoaded] = React.useState(false);
+    React.useEffect(() => {
+      retrieveStatusMessages();
+    }, []);
+
+    function retrieveStatusMessages() {
+      axios.get(CONFIG.apiUrl + '/get.php').then(response => {
+        setStatuses(response.data);
+        setLoaded(true);
+      });
+    }
+
+    function addStatusMessage(status) {
+      let updatedStatuses = statuses.slice(0); //this will make a copy of the statuses
+
+      updatedStatuses.push(status);
+      setStatuses(updatedStatuses);
+    }
+
     return React.createElement(React.Fragment, null, React.createElement("div", {
       id: "post-status"
     }, React.createElement(PostForm, {
-      messageTypes: messageTypes
+      messageTypes: messageTypes,
+      addStatusMessage: addStatusMessage
     })), React.createElement(StatusMessageList, {
-      messageTypes: messageTypes
+      messageTypes: messageTypes,
+      statuses: statuses,
+      loaded: loaded
     }));
   }
 
