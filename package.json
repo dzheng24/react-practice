@@ -10,7 +10,7 @@
     "axios": "^0.19.2",
     "babel-standalone": "^6.26.0",
     "create-react-class": "^15.6.3",
-    "date-and-time": "^0.6.3",
+    "date-and-time": "^0.14.2",
     "react": "^16.8",
     "react-dom": "^16.8",
     "react-transition-group": "^2.7"
