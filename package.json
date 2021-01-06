@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-standalone": "^6.26.0",
     "create-react-class": "^15.6.3",
     "date-and-time": "^0.6.3",
